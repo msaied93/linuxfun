@@ -1,0 +1,15 @@
+name = "Sakin"
+license = "MIT"
+description = "An elegant open source and mobile first theme"
+tags = ["blog", "company"]
+features = ["blog", "righttoleft"]
+
+[author]
+    name = "msaied93"
+    homepage = "http://msaied93.github.io"
+
+# If Porting existing theme
+[original]
+    author =  "spf13"
+    homepage = "http://spf13.com"
+    repo = "http://www.github.com/spf13/hyde"

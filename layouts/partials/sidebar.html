@@ -1,0 +1,19 @@
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>{{ .Site.Title }}</h1>
+      <p class="lead">
+      {{ with .Site.Params.Description }} {{.}} {{ else }}قالب <a href="http://hugo.spf13.com">هوغو</a> أنيق يدعم العربية مناسب للهواتف النقالة. مبني على قالب <a href="http://www.github.com/spf13/hyde">Hyde</a>.{{end}}
+      </p>
+    </div>
+
+    <ul class="sidebar-nav">
+      <li><a href="/linuxfun">الرئيسية</a> </li>
+      {{ range .Site.Menus.main }}
+        <li><a href="{{.Url}}"> {{ .Name }} </a></li>
+      {{end}}
+    </ul>
+
+    <p>{{ with .Site.Params.Copyright }}{{.}}{{ else }}&copy; {{.Now.Format "2006"}}. جميع الحقوق محفوظة. {{end}}</p>
+  </div>
+</div>

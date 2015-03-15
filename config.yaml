@@ -1,0 +1,8 @@
+baseurl: "http://msaied93.github.io/linuxfun"
+languageCode: "ar"
+title: "أساسيات لينكس"
+params:
+  Description: "دروس لينكس، مبسطة قدر الإمكان"
+  Copyright: "CC BY-SA 4.0 International"
+
+theme: "sakin"
