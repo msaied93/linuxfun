@@ -3,7 +3,7 @@
   <channel>
       <title>Posts on أساسيات لينكس </title>
       <generator uri="https://hugo.spf13.com">Hugo</generator>
-    <link>http://msaied93.github.io/linuxfun/post/index.xml/</link>
+    <link>https://msaied93.github.io/linuxfun/post/index.xml/</link>
     <language>ar</language>
     
     
@@ -11,10 +11,10 @@
     
     <item>
       <title>الجزء الأول - مكونات التوزيعة</title>
-      <link>http://msaied93.github.io/linuxfun/post/linux_p1/</link>
+      <link>https://msaied93.github.io/linuxfun/post/linux_p1/</link>
       <pubDate>Sun, 15 Mar 2015 14:52:25 IST</pubDate>
       
-      <guid>http://msaied93.github.io/linuxfun/post/linux_p1/</guid>
+      <guid>https://msaied93.github.io/linuxfun/post/linux_p1/</guid>
       <description>
 
 &lt;p&gt;إذا أردت استخدام لينكس فعليك أن تحصل على إحدى توزيعاته، فما هي التوزيعة؟&lt;/p&gt;
