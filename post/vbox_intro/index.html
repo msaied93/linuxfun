@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title> أساسيات استخدام VirtualBox &middot; أساسيات لينكس </title>
+
+  
+  <link rel="stylesheet" href="https://msaied93.github.io/linuxfun/css/poole.css">
+  <link rel="stylesheet" href="https://msaied93.github.io/linuxfun/css/syntax.css">
+  <link rel="stylesheet" href="https://msaied93.github.io/linuxfun/css/hyde.css">
+  
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  
+  <link href="" rel="alternate" type="application/rss+xml" title="أساسيات لينكس" />
+</head>
+
+<body class="layout-reverse" dir="rtl">
+
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>أساسيات لينكس</h1>
+      <p class="lead">
+       مجموعة دروس لينكس 
+      </p>
+    </div>
+
+    <ul class="sidebar-nav">
+      <li><a href="/linuxfun">الرئيسية</a> </li>
+      
+    </ul>
+
+    <p>CC BY-SA 4.0 International</p>
+  </div>
+</div>
+
+
+<div class="content container">
+<div class="post">
+  <h1>أساسيات استخدام VirtualBox</h1>
+  <span class="post-date">2015-03-17</span>
+      
+
+<p>يسمح برنامج VirtualBox بإنشاء أجهزة ظاهرية (virtual machines) وتثبيت نظم تشغيل مختلفة عليها. كما يوفر مجموعة من الخيارات والمزايا التي تجعل عملية تجربة نظم تشغيل جديدة سهلة جداً وآمنة.</p>
+
+<p>سنشرح في هذه المقالة طريقة إنشاء حاسوب ظاهري (أو وهمي) جديد، وسنتطلع على بعض الخيارات الأساسية عند العمل مع VirtualBox مثل تشغيل وإيقاف الأجهزة الظاهرية، أو استخدام ملفات iso كأقراص ظاهرية، وأخيراً حفظ لقطات عن حالة الجهاز (snapshots).</p>
+
+<p>سنتجاوز مرحلة تثبيت برنامج VirtualBox نفسه لأنها بسيطة، وتشبه كثيراً تثبيت أي برنامج آخر.</p>
+
+<h2 id="toc_0">إنشاء جهاز ظاهري جديد</h2>
+
+<p>الصورة التالية توضح واجهة البرنامج الرئيسية. من هذه النافذة يمكننا رؤية الحواسيب الظاهرية السابقة التي أنشأناها، ويمكننا بدء تشغيل أحد الأجهزة من زر Start، أو تعديل إعداداته ومواصفاته من زر Settings، أو إنشاء جهاز ظاهري جديد من زر New.</p>
+
+<p><img src="/linuxfun/post/vbox_intro/vbox_new-vm.png" alt="VirtualBox Manager" title="نافذة VirtualBox الرئيسية" />
+</p>
+
+<p>دعنا نضغط زر New لإنشاء جهاز ظاهري جديد. سوف تظهر لنا النافذة التالية:</p>
+
+<p><img src="/linuxfun/post/vbox_intro/vbox_new-vm_step1.png" alt="VirtualBox New VM" title="إنشاء جهاز ظاهري جديد في VirtualBox" />
+</p>
+
+<p>في هذه النافذة يطلب البرنامج تحديد اسم الحاسوب الظاهري، وتحديد نوع نظام التشغيل الذي سنثبته داخله. يستفيد البرنامج من معرفة نظام التشغيل في تعديل بعض المتغيرات الخاصة بالجهاز الظاهري أو اقتراح حجم مناسب للذاكرة RAM والقرص الصلب وهكذا.</p>
+
+<p>بعد هذه الخطوة نضغط Next فتظهر لنا النافذة التي تليها:</p>
+
+<p><img src="/linuxfun/post/vbox_intro/vbox_new-vm_step2.png" alt="VirtualBox New VM" title="إنشاء جهاز ظاهري جديد في VirtualBox" />
+</p>
+
+<p>هنا نحدد حجم الذاكرة التي سيحجزها VirtualBox ويخصصها للجهاز الظاهري.</p>
+
+<p>لا يمكن حجز ذاكرة RAM للجهاز الظاهري أكبر من حجم الذاكرة الكلي المتوفر على الجهاز الحقيقي، الجزء الملون بالأخضر هو حجم الذاكرة الذي يمكن حجزه &ldquo;بأمان&rdquo;، وهو يساوي 2 غيغابايت تقريباً على الجهاز الذي التقطت عليه هذه الصورة (حجم الذاكرة الكلي 4 غيغابايت). أما إذا حددت حجماً يقع ضمن المجال الزهري أو الأحمر فقد يسبب انخفاضاً في أداء الحاسوب ككل نتيجة امتلاء الذاكرة.</p>
+
+<p>سنكتفي بحجز 512 ميغابايت ذاكرة حالياً. لنضغط Next وننتقل إلى الخطوة التالية:</p>
+
+<p><img src="/linuxfun/post/vbox_intro/vbox_new-vm_step3.png" alt="VirtualBox New VM" title="إنشاء جهاز ظاهري جديد في VirtualBox" />
+</p>
+
+<p>في هذه الخطوة يطلب منا تحديد قرص صلب ظاهري لاستخدامه مع الجهاز الذي سننشئه. سوف نحدد خيار إنشاء قرص ظاهري جديد (كما في الصورة).</p>
+
+<p>بعد الضغط على Create تظهر لنا النافذة التالية:</p>
+
+<p><img src="/linuxfun/post/vbox_intro/vbox_new-vm_step4.png" alt="VirtualBox New VM" title="إنشاء جهاز ظاهري جديد في VirtualBox" />
+</p>
+
+<p>هنا يطلب تحديد نوع القرص الظاهري الذي سننشئه. هناك أنواع كثيرة مدعومة في البرنامج، تختلف عن بعضها بعدد من الخصائص. الخيار الافتراضي هو الخيار الأول (VDI)، وسوف نستخدمه كما هو.</p>
+
+<p><img src="/linuxfun/post/vbox_intro/vbox_new-vm_step5.png" alt="VirtualBox New VM" title="إنشاء جهاز ظاهري جديد في VirtualBox" />
+</p>
+
+<p>بعد الضغط على Next نصل إلى هذه النافذة. هنا يمكننا تحديد طريقة حجز المساحة التخزينية على القرص الصلب: إما ديناميكياً أو حجم ثابت.</p>
+
+<p>إذا حددت خيار الحجم الثابت (Fixed size)، سوف ينشئ البرنامج ملفاً امتداده vdi (حسب ما اخترنا في الخطوة السابقة) وحجمه يطابق حجم القرص الصلب الظاهري الذي سنختاره بعد قليل؛ فإذا اخترنا حجم القرص الظاهري 8 غيغابايت مثلا سوف يحجز البرنامج فوراً ملف vdi بحجم 8 غيغابايت على القرص الحقيقي لتخزين محتويات القرص الظاهري عليه.</p>
+
+<p>أما إذا حددت خيار Dynamically allocated فسوف ينشئ البرنامج القرص الظاهري مبدئياً بحجم صغير (لا يتجاوز 10 ميغابايت)، ثم يوسعه كلما دعت الحاجة حتى الوصول إلى الحجم الأقصى النهائي والذي هو 8 غيغابايت في مثالنا.</p>
+
+<p>على أي حال، 8 غيغابايت صغيرة نسبياً، وطالما أننا حددنا خيار Dynamically allocated فلا مشكلة لو حددنا حجماً أكبر بقليل للقرص الصلب الظاهري. سوف نحدد 16 غيغابايت كما هو موضح في الصورة التالية.</p>
+
+<p><img src="/linuxfun/post/vbox_intro/vbox_new-vm_step6.png" alt="VirtualBox New VM" title="إنشاء جهاز ظاهري جديد في VirtualBox" />
+</p>
+
+<p>وهكذا نكون قد انتهينا من إنشاء الحاسوب الظاهري، وهو جاهز الآن للإقلاع وتثبيت نظام تشغيل عليه.</p>
+
+<p><img src="/linuxfun/post/vbox_intro/vbox_new-vm_step7.png" alt="VirtualBox New VM" title="إنشاء جهاز ظاهري جديد في VirtualBox" />
+</p>
+
+<h2 id="toc_1">الإقلاع الأول</h2>
+
+<p>عند إقلاع الجهاز الظاهري أول مرة ستظهر لنا النافذة التالية التي تطلب منا تحديد قرص إقلاعي لتثبيت نظام التشغيل منه.</p>
+
+<p><img src="/linuxfun/post/vbox_intro/vbox_first-boot.png" alt="VirtualBox VM First Boot" title="إقلاع الجهاز الظاهري أول مرة" />
+</p>
+
+<p>إذا ظهرت هذه الشاشة يمكننا تحديد ملف iso مناسب للإقلاع منه وتثبيت نظام التشغيل.</p>
+
+<p>أو يمكن أن تواجهنا شاشة الخطأ التالية التي تبين أن الجهاز لا يحوي أي وسيط مناسب للإقلاع:</p>
+
+<p><img src="/linuxfun/post/vbox_intro/vbox_error-booting.png" alt="VirtualBox No Bootable Medium" title="فشل إقلاع الجهاز الظاهري لعدم وجود وسيط إقلاعي" />
+</p>
+
+<p>إذا ظهرت هذه الشاشة فعليك ببساطة إغلاق هذه النافذة (ثم اختيار Power off the machine) لإيقاف تشغيل الجهاز.</p>
+
+<p><img src="/linuxfun/post/vbox_intro/vbox_close.png" alt="VirtualBox Power off the machine" title="إيقاف تشغيل الجهاز الظاهري" />
+</p>
+
+<p>بعد إيقاف تشغيل الجهاز توجه إلى الإعدادات (من زر Settings)، وبعدها اختر تبويب Storage؛ كما في الصورة التالية:</p>
+
+<p><img src="/linuxfun/post/vbox_intro/vbox_storage-settings.png" alt="VirtualBox VM Settings" title="إعدادات الجهاز الظاهري" />
+</p>
+
+<p>ومن هناك يمكننا تحديد سواقة الأقراص الليزرية الخاصة بالجهاز الظاهري، وبالنقر على زر القرص الأزرق في أقصى اليمين تظهر لنا قائمة قصيرة تسمح باستخدام سواقة الجهاز الحقيقي والقراءة منها (إذا كان لديك نظام تشغيل على قرص ليزري حقيقي يمكنك استخدام هذا الخيار)، أو يمكن استخدام الخيار الأول لتحديد ملف iso واستخدامه كقرص ظاهري للجهاز والإقلاع منه.</p>
+
+<p><img src="/linuxfun/post/vbox_intro/vbox_cd-drive.png" alt="VirtualBox VM CD Drive Settings" title="إعدادات سواقة الأقراص الليزرية في الجهاز الظاهري" />
+</p>
+
+<p>هنا تظهر نافذة تحديد صورة القرص الظاهري حيث يمكن الاستعراض بحثاً عن ملفات iso التي يمكن استخدامها.</p>
+
+<p><img src="/linuxfun/post/vbox_intro/vbox_choose-virtual-disk.png" alt="VirtualBox Choose Virtual Disk Image" title="تحديد صورة قرص ظاهري لاستخدامها مع الحاسوب الظاهري" />
+</p>
+
+<p>بعد ذلك يمكننا تشغيل الجهاز مرة ثانية ويجب عندها أن يقلع من القرص الذي حددناه له، وعند ذلك تبدأ عملية تثبيت نظام التشغيل.</p>
+
+<h2 id="toc_2">استخدام ميزة Snapshots</h2>
+
+<hr />
+
+<p>قريباً</p>
+
+<hr />
+
+</div>
+</div>
+
+</body>
+</html>

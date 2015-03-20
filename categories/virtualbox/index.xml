@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+      <title>Virtualbox on أساسيات لينكس </title>
+      <generator uri="https://hugo.spf13.com">Hugo</generator>
+    <link>https://msaied93.github.io/linuxfun/categories/virtualbox/index.xml/</link>
+    <language>ar</language>
+    
+    
+    <updated>Tue, 17 Mar 2015 17:52:06 IST</updated>
+    
+    <item>
+      <title>أساسيات استخدام VirtualBox</title>
+      <link>https://msaied93.github.io/linuxfun/post/vbox_intro/</link>
+      <pubDate>Tue, 17 Mar 2015 17:52:06 IST</pubDate>
+      
+      <guid>https://msaied93.github.io/linuxfun/post/vbox_intro/</guid>
+      <description>
+
+&lt;p&gt;يسمح برنامج VirtualBox بإنشاء أجهزة ظاهرية (virtual machines) وتثبيت نظم تشغيل مختلفة عليها. كما يوفر مجموعة من الخيارات والمزايا التي تجعل عملية تجربة نظم تشغيل جديدة سهلة جداً وآمنة.&lt;/p&gt;
+
+&lt;p&gt;سنشرح في هذه المقالة طريقة إنشاء حاسوب ظاهري (أو وهمي) جديد، وسنتطلع على بعض الخيارات الأساسية عند العمل مع VirtualBox مثل تشغيل وإيقاف الأجهزة الظاهرية، أو استخدام ملفات iso كأقراص ظاهرية، وأخيراً حفظ لقطات عن حالة الجهاز (snapshots).&lt;/p&gt;
+
+&lt;p&gt;سنتجاوز مرحلة تثبيت برنامج VirtualBox نفسه لأنها بسيطة، وتشبه كثيراً تثبيت أي برنامج آخر.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_0&#34;&gt;إنشاء جهاز ظاهري جديد&lt;/h2&gt;
+
+&lt;p&gt;الصورة التالية توضح واجهة البرنامج الرئيسية. من هذه النافذة يمكننا رؤية الحواسيب الظاهرية السابقة التي أنشأناها، ويمكننا بدء تشغيل أحد الأجهزة من زر Start، أو تعديل إعداداته ومواصفاته من زر Settings، أو إنشاء جهاز ظاهري جديد من زر New.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm.png&#34; alt=&#34;VirtualBox Manager&#34; title=&#34;نافذة VirtualBox الرئيسية&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;دعنا نضغط زر New لإنشاء جهاز ظاهري جديد. سوف تظهر لنا النافذة التالية:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm_step1.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;في هذه النافذة يطلب البرنامج تحديد اسم الحاسوب الظاهري، وتحديد نوع نظام التشغيل الذي سنثبته داخله. يستفيد البرنامج من معرفة نظام التشغيل في تعديل بعض المتغيرات الخاصة بالجهاز الظاهري أو اقتراح حجم مناسب للذاكرة RAM والقرص الصلب وهكذا.&lt;/p&gt;
+
+&lt;p&gt;بعد هذه الخطوة نضغط Next فتظهر لنا النافذة التي تليها:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm_step2.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;هنا نحدد حجم الذاكرة التي سيحجزها VirtualBox ويخصصها للجهاز الظاهري.&lt;/p&gt;
+
+&lt;p&gt;لا يمكن حجز ذاكرة RAM للجهاز الظاهري أكبر من حجم الذاكرة الكلي المتوفر على الجهاز الحقيقي، الجزء الملون بالأخضر هو حجم الذاكرة الذي يمكن حجزه &amp;ldquo;بأمان&amp;rdquo;، وهو يساوي 2 غيغابايت تقريباً على الجهاز الذي التقطت عليه هذه الصورة (حجم الذاكرة الكلي 4 غيغابايت). أما إذا حددت حجماً يقع ضمن المجال الزهري أو الأحمر فقد يسبب انخفاضاً في أداء الحاسوب ككل نتيجة امتلاء الذاكرة.&lt;/p&gt;
+
+&lt;p&gt;سنكتفي بحجز 512 ميغابايت ذاكرة حالياً. لنضغط Next وننتقل إلى الخطوة التالية:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm_step3.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;في هذه الخطوة يطلب منا تحديد قرص صلب ظاهري لاستخدامه مع الجهاز الذي سننشئه. سوف نحدد خيار إنشاء قرص ظاهري جديد (كما في الصورة).&lt;/p&gt;
+
+&lt;p&gt;بعد الضغط على Create تظهر لنا النافذة التالية:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm_step4.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;هنا يطلب تحديد نوع القرص الظاهري الذي سننشئه. هناك أنواع كثيرة مدعومة في البرنامج، تختلف عن بعضها بعدد من الخصائص. الخيار الافتراضي هو الخيار الأول (VDI)، وسوف نستخدمه كما هو.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm_step5.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;بعد الضغط على Next نصل إلى هذه النافذة. هنا يمكننا تحديد طريقة حجز المساحة التخزينية على القرص الصلب: إما ديناميكياً أو حجم ثابت.&lt;/p&gt;
+
+&lt;p&gt;إذا حددت خيار الحجم الثابت (Fixed size)، سوف ينشئ البرنامج ملفاً امتداده vdi (حسب ما اخترنا في الخطوة السابقة) وحجمه يطابق حجم القرص الصلب الظاهري الذي سنختاره بعد قليل؛ فإذا اخترنا حجم القرص الظاهري 8 غيغابايت مثلا سوف يحجز البرنامج فوراً ملف vdi بحجم 8 غيغابايت على القرص الحقيقي لتخزين محتويات القرص الظاهري عليه.&lt;/p&gt;
+
+&lt;p&gt;أما إذا حددت خيار Dynamically allocated فسوف ينشئ البرنامج القرص الظاهري مبدئياً بحجم صغير (لا يتجاوز 10 ميغابايت)، ثم يوسعه كلما دعت الحاجة حتى الوصول إلى الحجم الأقصى النهائي والذي هو 8 غيغابايت في مثالنا.&lt;/p&gt;
+
+&lt;p&gt;على أي حال، 8 غيغابايت صغيرة نسبياً، وطالما أننا حددنا خيار Dynamically allocated فلا مشكلة لو حددنا حجماً أكبر بقليل للقرص الصلب الظاهري. سوف نحدد 16 غيغابايت كما هو موضح في الصورة التالية.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm_step6.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;وهكذا نكون قد انتهينا من إنشاء الحاسوب الظاهري، وهو جاهز الآن للإقلاع وتثبيت نظام تشغيل عليه.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm_step7.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;الإقلاع الأول&lt;/h2&gt;
+
+&lt;p&gt;عند إقلاع الجهاز الظاهري أول مرة ستظهر لنا النافذة التالية التي تطلب منا تحديد قرص إقلاعي لتثبيت نظام التشغيل منه.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_first-boot.png&#34; alt=&#34;VirtualBox VM First Boot&#34; title=&#34;إقلاع الجهاز الظاهري أول مرة&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;إذا ظهرت هذه الشاشة يمكننا تحديد ملف iso مناسب للإقلاع منه وتثبيت نظام التشغيل.&lt;/p&gt;
+
+&lt;p&gt;أو يمكن أن تواجهنا شاشة الخطأ التالية التي تبين أن الجهاز لا يحوي أي وسيط مناسب للإقلاع:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_error-booting.png&#34; alt=&#34;VirtualBox No Bootable Medium&#34; title=&#34;فشل إقلاع الجهاز الظاهري لعدم وجود وسيط إقلاعي&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;إذا ظهرت هذه الشاشة فعليك ببساطة إغلاق هذه النافذة (ثم اختيار Power off the machine) لإيقاف تشغيل الجهاز.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_close.png&#34; alt=&#34;VirtualBox Power off the machine&#34; title=&#34;إيقاف تشغيل الجهاز الظاهري&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;بعد إيقاف تشغيل الجهاز توجه إلى الإعدادات (من زر Settings)، وبعدها اختر تبويب Storage؛ كما في الصورة التالية:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_storage-settings.png&#34; alt=&#34;VirtualBox VM Settings&#34; title=&#34;إعدادات الجهاز الظاهري&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;ومن هناك يمكننا تحديد سواقة الأقراص الليزرية الخاصة بالجهاز الظاهري، وبالنقر على زر القرص الأزرق في أقصى اليمين تظهر لنا قائمة قصيرة تسمح باستخدام سواقة الجهاز الحقيقي والقراءة منها (إذا كان لديك نظام تشغيل على قرص ليزري حقيقي يمكنك استخدام هذا الخيار)، أو يمكن استخدام الخيار الأول لتحديد ملف iso واستخدامه كقرص ظاهري للجهاز والإقلاع منه.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_cd-drive.png&#34; alt=&#34;VirtualBox VM CD Drive Settings&#34; title=&#34;إعدادات سواقة الأقراص الليزرية في الجهاز الظاهري&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;هنا تظهر نافذة تحديد صورة القرص الظاهري حيث يمكن الاستعراض بحثاً عن ملفات iso التي يمكن استخدامها.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_choose-virtual-disk.png&#34; alt=&#34;VirtualBox Choose Virtual Disk Image&#34; title=&#34;تحديد صورة قرص ظاهري لاستخدامها مع الحاسوب الظاهري&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;بعد ذلك يمكننا تشغيل الجهاز مرة ثانية ويجب عندها أن يقلع من القرص الذي حددناه له، وعند ذلك تبدأ عملية تثبيت نظام التشغيل.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;استخدام ميزة Snapshots&lt;/h2&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;قريباً&lt;/p&gt;
+
+&lt;hr /&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
