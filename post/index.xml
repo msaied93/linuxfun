@@ -1,25 +1,170 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-      <title>Posts on أساسيات لينكس </title>
-      <generator uri="https://hugo.spf13.com">Hugo</generator>
-    <link>https://msaied93.github.io/linuxfun/post/index.xml/</link>
+    <title>Posts on أساسيات لينكس</title>
+    <link>https://msaied93.github.io/linuxfun/post/</link>
+    <description>Recent content in Posts on أساسيات لينكس</description>
+    <generator>Hugo -- gohugo.io</generator>
     <language>ar</language>
+    <lastBuildDate>Thu, 19 Mar 2015 14:43:10 +0200</lastBuildDate>
+    <atom:link href="https://msaied93.github.io/linuxfun/post/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <updated>Thu, 19 Mar 2015 14:42:20 IST</updated>
+    <item>
+      <title>الجزء الثاني - نظام الملفات</title>
+      <link>https://msaied93.github.io/linuxfun/post/linux_p2/</link>
+      <pubDate>Thu, 19 Mar 2015 14:43:10 +0200</pubDate>
+      
+      <guid>https://msaied93.github.io/linuxfun/post/linux_p2/</guid>
+      <description>
+
+&lt;p&gt;تلتزم توزيعات لينكس بطريقة موحدة لتنظيم وتوزيع ملفات ومجلدات النظام، وذلك حسب معيار &lt;strong&gt;FHS&lt;/strong&gt; (أي &lt;em&gt;File Hierarchy Standard&lt;/em&gt;) الذي وضعته مؤسسة لينكس (&lt;em&gt;&lt;a href=&#34;http://linuxfoundation.org&#34;&gt;Linux Foundation&lt;/a&gt;&lt;/em&gt;). يحدد هذا المعيار أسماء المجلدات الأساسية في النظام، ودور كل واحد منها.&lt;/p&gt;
+
+&lt;p&gt;في هذا الجزء سنتحدث عن أهم المجلدات ودورها في النظام، بالإضافة لتغطية بعض خصائص نظام الملفات في لينكس.&lt;/p&gt;
+
+&lt;h2 id=&#34;جذر-نظام-الملفات:9149dfc140eb667aa574eb5733e821b1&#34;&gt;جذر نظام الملفات&lt;/h2&gt;
+
+&lt;p&gt;ترتب الملفات في لينكس ضمن مجلدات، والمجلدات يمكن أن توضع هي أيضاً ضمن مجلدات أخرى، وبذلك يبدو نظام الملفات منظماً بشكل شجرة.&lt;/p&gt;
+
+&lt;p&gt;للشجرة نقطة بداية وحيدة في أعلاها، تدعى &lt;em&gt;’’الجذر‘‘&lt;/em&gt;. يحوي جذر نظام الملفات مجموعة من المجلدات الأساسية لنظام التشغيل، تحوي المكتبات والبرامج الضرورية لعمل النظام، بالإضافة إلى ملفات إعدادات النظام وغيرها.&lt;/p&gt;
+
+&lt;p&gt;في لينكس، لا يوجد سوى شجرة ملفات واحدة فقط، وهذه الشجرة تُخزَّن على القرص الذي تم تثبيت النظام عليه. كيف نصل إذاً إلى الأقراص الأخرى؟ هذا يكون عبر &lt;em&gt;ربط&lt;/em&gt; (بالإنكليزية &lt;em&gt;mount&lt;/em&gt;) القرص أو القسم (&lt;em&gt;partition&lt;/em&gt;) مع شجرة الملفات الأساسية.&lt;/p&gt;
+
+&lt;p&gt;لنقل أن لدينا قرصين صلبين في الجهاز، ولنفرض أن نظام لينكس مُثبَّت على القرص الأول، إذاً جذر نظام الملفات (ويرمز له &lt;code&gt;/&lt;/code&gt;) يكون مرتبط مع هذا القرص. كل الملفات والمجلدات التي تخزن على هذا القرص ستظهر ضمن المجلد &lt;code&gt;/&lt;/code&gt; (يدعى root أو الجذر ولكن يكتب &lt;code&gt;/&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;لا بد أن يكون القرص الذي يحوي ملفات &lt;code&gt;/&lt;/code&gt; متوفراً أثناء الإقلاع وإلا فلا يمكن إقلاع النظام (طبعاً لا يشترط أن يكون متوفراً على قرص صلب، بل يمكن أن يوضع على CD أو ذاكرة USB).&lt;/p&gt;
+
+&lt;p&gt;الآن كيف نصل إلى القرص الثاني؟ وأين يمكننا رؤية الملفات والمجلدات المخزنة فيه؟ سنحتاج إلى ربطه مع الشجرة الأساسية كما سنرى في الفقرة التالية.&lt;/p&gt;
+
+&lt;h2 id=&#34;عملية-الربط-mounting:9149dfc140eb667aa574eb5733e821b1&#34;&gt;عملية الربط Mounting&lt;/h2&gt;
+
+&lt;p&gt;كلما أردنا الوصول إلى محتويات قرص أو قسم غير القسم الذي يحوي جذر شجرة الملفات، علينا &lt;em&gt;’’ربطه‘‘&lt;/em&gt; &lt;em&gt;mount&lt;/em&gt; كما يلي:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;ننشئ مجلداً جديداً (ضمن شجرة المجلدات الحالية).&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;نربط هذا المجلد مع القرص الثاني (سنتحدث عن تفاصيل تنفيذ هذه العملية لاحقاً).&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;الآن عندما ندخل على المجلد الجديد الذي أنشأناه سوف ينقلنا إلى محتويات القرص الثاني. لم يعد هذا المجلد مجلداً عادياً بل تحول إلى &lt;em&gt;’’نقطة ربط‘‘&lt;/em&gt; أو &lt;em&gt;mount point&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/linux_p2/mounting.png&#34; alt=&#34;&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;يمكنك تخيل نقطة الربط وكأنها بوابة تنقلك من قرص إلى قرص آخر، دون أن تشعر! فنقطة الربط بدأت كمجلد عادي وتعمل كأنها مجلد عادي. لا يوجد أي اختلاف من وجهة نظر نظام التشغيل أو التطبيقات التي تعمل مع نظام الملفات؛ الاختلاف الوحيد هو أنك إذا أنشأت ملفات جديدة فسوف تُخزَّن &amp;ndash; فيزيائياً &amp;ndash; على القرص الثاني وليس الأول.&lt;/p&gt;
+
+&lt;p&gt;لا يوجد طريقة أخرى للتعامل مع الأقراص الإضافية في نظام التشغيل: فعند توصيل ذاكرة USB أو قرص خارجي مع الجهاز ستحتاج لربطه والدخول غلى محتوياته بهذه الطريقة، وكذلك إذا أدخلت قرصاً ليزرياً، بل حتى الأقراص المشتركة عبر الشبكة يصل إليها لينكس بالأسلوب ذاته.&lt;/p&gt;
+
+&lt;p&gt;لتسهيل العملية على المستخدم غالباً يتم ربط الأجهزة التخزينية القابلة للإزالة (الأقراص الليزرية، ذواكر USB والأقراص الخارجية) بطريقة آلية، أو يظهر للمستخدم مدخلة خاصة في مدير الملفات تسمح له بالدخول مباشرة إلى محتويات الأقراص الخارجية (الفكرة هي أن النقر على هذه المدخلة يؤدي لربط الجهاز التخزيني وفتح المجلد الذي ربط معه تلقائياً).&lt;/p&gt;
+
+&lt;h2 id=&#34;مجلدات-النظام:9149dfc140eb667aa574eb5733e821b1&#34;&gt;مجلدات النظام&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/linux_p2/file-sys-hier.png&#34; alt=&#34;&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;كما ذكرنا، ملفات ومجلدات النظام تُخزّن في &lt;code&gt;/&lt;/code&gt;، ومن أهم المجلدات التي نجدها فيه هي:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;&lt;code&gt;/bin&lt;/code&gt;&lt;/strong&gt;: يحوي الملفات التنفيذية (Binaries) لتطبيقات وبرامج ضرورية للنظام ولا يمكن الاستغناء عنها.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;&lt;code&gt;/lib&lt;/code&gt;&lt;/strong&gt;: مكتبات أساسية للنظام.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;&lt;code&gt;/boot&lt;/code&gt;&lt;/strong&gt;: يحوي نواة النظام، ومدير الإقلاع، وإعدادات الإقلاع وبعض الملفات الأخرى اللازمة لعملية إقلاع النظام.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;&lt;code&gt;/etc&lt;/code&gt;&lt;/strong&gt;: تخزن فيه إعدادات النظام. في لينكس، معظم إعدادات البرامج وإعدادات النظام نفسها توضع في مجلد &lt;code&gt;/etc&lt;/code&gt; بشكل ملفات نصية، يمكن فتحها وتحريرها باستخدام أي محرر نصوص.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;&lt;code&gt;/home&lt;/code&gt;&lt;/strong&gt;: مجلد المنزل أو البيت. يستخدم هذا المجلد لتخزين ملفات المستخدمين، وإعداداتهم، وأيضاً يمكن تثبيت برامج خاصة بالمستخدم ضمنه. لا يخزن المستخدمون ملفاتهم مباشرة في مجلد &lt;code&gt;/home&lt;/code&gt;، بل يملك كل مستخدم مجلداً خاصاً به ضمن &lt;code&gt;/home&lt;/code&gt; يسمى بنفس اسم المستخدم؛ مثلاً &lt;code&gt;/home/muhammad&lt;/code&gt; هو المجلد الخاص بالمستخدم &lt;code&gt;muhammad&lt;/code&gt;، وفيه يضع ملفاته. أما &lt;code&gt;/home/saied&lt;/code&gt; فهو مجلد المستخدم &lt;code&gt;saied&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;لا يحق للمستخدم إنشاء الملفات والمجلدات عشوائياً في أي مكان في نظام الملفات، بل فقط في أماكن محددة: أهمها مجلد المنزل الخاص بالمستخدم، وأيضاً مجلد &lt;code&gt;/tmp&lt;/code&gt; الذي يخزن فيه جميع المستخدمون ملفاتهم المؤقتة.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;&lt;code&gt;/usr&lt;/code&gt;&lt;/strong&gt;:
+يستخدم لتثبيت البرامج والتطبيقات الخدمية التي تفيد المستخدمين ولكنها ليست أساسية للنظام نفسه، ستجد بداخله أيضاً مجلدات &lt;code&gt;/usr/bin&lt;/code&gt; للملفات التنفيذية، و &lt;code&gt;/usr/lib&lt;/code&gt; للمكتبات، و &lt;code&gt;/usr/share&lt;/code&gt; الذي يحوي ملفات المساعدة وأمثلة عن استخدام البرامج، ويحوي أيضاً أشياء أخرى مثل مجلد الخطوط &lt;code&gt;/usr/share/fonts&lt;/code&gt; (تُخزَّن فيه الخطوط المتوفرة على النظام، وهو يقابل &lt;code&gt;C:\Windows\Fonts\&lt;/code&gt; على نظام ويندوز).&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;&lt;code&gt;/root&lt;/code&gt;&lt;/strong&gt;: مجلد البيت للمستخدم &lt;code&gt;root&lt;/code&gt;. في نظام لينكس هناك مستخدم وحيد اسمه &lt;code&gt;root&lt;/code&gt; وهو يملك صلاحيات كاملة على النظام: حيث يمكنه قراءة أي ملف والتعديل عليه أو حذفه، كما يحق له إضافة مستخدمين جدد أو حذف القدامى أو التعديل عليهم: مثل منحهم صلاحيات أعلى أو سحب صلاحيات قديمة، كما يمكنه تغيير كلمة السر لأي مستخدم دون معرفة الكلمة القديمة&amp;hellip; وأي شيء آخر يمكن أن تفكر به.&lt;/p&gt;
+
+&lt;p&gt;سنعود للحديث عن المستخدم &lt;code&gt;root&lt;/code&gt; لاحقاً عند الحديث عن إدارة المستخدمين في لينكس.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;ملحوظة-مهمة:9149dfc140eb667aa574eb5733e821b1&#34;&gt;ملحوظة مهمة&lt;/h4&gt;
+
+&lt;p&gt;أسماء الملفات &lt;em&gt;حساسة لحالة الأحرف&lt;/em&gt;. المجلد &lt;code&gt;/boot&lt;/code&gt; مختلف عن المجلد &lt;code&gt;/Boot&lt;/code&gt; ومختلف عن المجلد &lt;code&gt;/BOOT&lt;/code&gt;. انتبه لهذه النقطة خصوصاً عند استخدام سطر الأوامر.&lt;/p&gt;
+
+&lt;h2 id=&#34;المسار-النسبي-والمسار-المطلق:9149dfc140eb667aa574eb5733e821b1&#34;&gt;المسار النسبي والمسار المطلق&lt;/h2&gt;
+
+&lt;p&gt;عندما تريد الإشارة لموقع ملف أو مجلد ما في نظام الملفات فهناك أسلوبين لكتابة المسار:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/home/muhammad/Desktop/myfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;المسار السابق يشير للملف &lt;code&gt;myfile.txt&lt;/code&gt; الموجود ضمن مجلد سطح المكتب &lt;code&gt;Desktop&lt;/code&gt; للمستخدم &lt;code&gt;muhammad&lt;/code&gt;. يدعى هذا المسار بالمسار المطلق (Absolute Path)، لأنه يشير دائماً إلى الموقع نفسه. لاحظ أن المسار يبدأ بعلامة &lt;code&gt;/&lt;/code&gt; التي تشير إلى جذر نظام الملفات، وبعدها تذكر المجلدات التي يجب أن نمر خلالها حتى الوصول إلى الملف المطلوب.&lt;/p&gt;
+
+&lt;p&gt;أما المسار التالي:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;../Desktop/myfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;لاحظ أن بداية المسار هي العلامة (&lt;code&gt;..&lt;/code&gt;) وهي تمثل المجلد الأب للمجلد الحالي. فإذا كان المستخدم حالياً ضمن المجلد &lt;code&gt;/home/muhammad/Desktop&lt;/code&gt; فهذا يعني أن &lt;code&gt;..&lt;/code&gt; تمثل &lt;code&gt;/home/muhammad&lt;/code&gt;. وإذا كان المستخدم ضمن المجلد &lt;code&gt;/home&lt;/code&gt; عند ذلك تشير &lt;code&gt;..&lt;/code&gt; إلى المجلد &lt;code&gt;/&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;هذا النوع من المسارات يدعى المسار النسبي (Relative Path)، لماذا؟ لأن الموقع الذي يشير إليه يتغير حسب الموقع الحالي للمستخدم:&lt;/p&gt;
+
+&lt;p&gt;مثلاً المستخدم موجود في المجلد التالي:&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;strong&gt;/home/muhammad&lt;/strong&gt;/Documents/
+&lt;/pre&gt;
+
+&lt;p&gt;عندئذ سوف يشير المسار النسبي السابق إلى المسار التالي:&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;strong&gt;/home/muhammad&lt;/strong&gt;/Desktop/myfile.txt
+&lt;/pre&gt;
+
+&lt;p&gt;لاحظ كيف استبدلنا &lt;code&gt;..&lt;/code&gt; في المسار النسبي بالمجلد الأب للمسار الذي يوجد به المستخدم حالياً.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/linux_p2/relative-path.png&#34; alt=&#34;&#34; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;لنفرض أن المسار الحالي للمستخدم هو:&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;strong&gt;/home/saied&lt;/strong&gt;/Desktop/
+&lt;/pre&gt;
+
+&lt;p&gt;المسار الغليظ يمثل مسار المجلد الأب للموقع الحالي للمستخدم. الآن لو استخدمنا المسار النسبي السابق إلى أين سوف يؤدي بنا؟&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;strong&gt;..&lt;/strong&gt;/Desktop/myfile.txt &lt;strong&gt;-&gt;&lt;/strong&gt; &lt;strong&gt;/home/saied&lt;/strong&gt;/Desktop/myfile.txt
+&lt;/pre&gt;
+
+&lt;p&gt;كما ذكرنا المسار المطلق يبدأ بعلامة &lt;code&gt;/&lt;/code&gt; التي تدل على جذر نظام الملفات، أما المسارات النسبية فهناك عدة علامات يمكن أن تبدأ بها:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;..&lt;/code&gt;: تشير للمجلد الأب للموقع الحالي للمستخدم.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;.&lt;/code&gt;: تشير للمجلد الحالي نفسه. أحياناً تكون كتابتها إلزامية وأحياناً يمكن إهمالها، مثلاً:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./Desktop/myfile.txt
+/Desktop/myfile.txt
+Desktop/myfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;كلها تؤدي إلى نفس الموقع. لاحظ أن المسار الثاني يتشابه مع المسارات المطلقة.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;&lt;code&gt;~&lt;/code&gt;&lt;/strong&gt;: تدل على مجلد البيت للمستخدم الحالي، مثلاً إذا كان اسم المستخدم الحالي &lt;code&gt;muhammad&lt;/code&gt; عند ذلك تشير &lt;code&gt;~&lt;/code&gt; إلى المجلد &lt;code&gt;/home/muhammad&lt;/code&gt;. يمكن استخدامها مع اسم مستخدم آخر للإشارة إلى مجلد البيت الخاص به، مثلاً المسار &lt;code&gt;~saied&lt;/code&gt; يشير إلى &lt;code&gt;/home/saied&lt;/code&gt; مهما كان اسم المستخدم الذي يستخدم الحاسوب حالياً.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>تثبيت OpenSUSE</title>
       <link>https://msaied93.github.io/linuxfun/post/install-opensuse/</link>
-      <pubDate>Thu, 19 Mar 2015 14:42:20 IST</pubDate>
+      <pubDate>Thu, 19 Mar 2015 14:42:20 +0200</pubDate>
       
       <guid>https://msaied93.github.io/linuxfun/post/install-opensuse/</guid>
       <description>
 
 &lt;p&gt;شرح مفصل لتثبيت توزيعة openSUSE خطوة بخطوة.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_0&#34;&gt;الحصول على توزيعة أوبن سوزا&lt;/h2&gt;
+&lt;h2 id=&#34;الحصول-على-توزيعة-أوبن-سوزا:2d282031954fe3e6507567af122525b1&#34;&gt;الحصول على توزيعة أوبن سوزا&lt;/h2&gt;
 
 &lt;p&gt;تتوفر توزيعة أوبن سوزا للتنزيل مجاناً من موقع التوزيعة: &lt;a href=&#34;http://opensuse.org&#34;&gt;http://opensuse.org&lt;/a&gt;. هناك عدة خيارات للتنزيل:&lt;/p&gt;
 
@@ -39,32 +184,32 @@
 
 &lt;p&gt;سنعتمد على قرص DVD لنسخة أوبن سوزا 12.3 في شرح عملية التثبيت.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;الإقلاع من القرص&lt;/h2&gt;
+&lt;h2 id=&#34;الإقلاع-من-القرص:2d282031954fe3e6507567af122525b1&#34;&gt;الإقلاع من القرص&lt;/h2&gt;
 
 &lt;p&gt;بعد تنزيل القرص من الموقع ستحصل على ملف iso يمثل &amp;ldquo;صورة&amp;rdquo; عن محتويات القرص. يمكنك استخدام هذه الصورة بعدة أساليب:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;نسخ الصورة على قرص ليزري باستخدام أحد برامج نسخ الأقراص (مثل &lt;a href=&#34;http://www.infrarecorder.org/&#34;&gt;InfraRecorder&lt;/a&gt;). يمكنك بعدها استخدام القرص للإقلاع منه على جهازك العادي.&lt;/p&gt;&lt;/li&gt;
 
-&lt;li&gt;&lt;p&gt;استخدام ملف iso كما هو والإقلاع منه على جهاز ظاهري، عبر استخدام برنامج VirtualBox أو VMware. انظر &lt;a href=&#34;/linuxfun/post/vbox_intro&#34;&gt;الدرس التقديمي عن VirtualBox&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;استخدام ملف iso كما هو والإقلاع منه على جهاز ظاهري، عبر استخدام برنامج VirtualBox أو VMware. انظر &lt;a href=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/vbox_intro&#34;&gt;الدرس التقديمي عن VirtualBox&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;نسخ ملف iso على ذاكرة USB، يمكنك يعدها استخدام هذه الذاكرة لإقلاع الجهاز منها. هناك عدة برامج لنسخ الأقراص إلى ذواكر USB وتحويلها إلى إقلاعية، لكن قد تحتاج لتجربة أكثر من واحد لأن البرنامج غالباً لا يدعم جميع توزيعات لينكس. بالنسبة لأقراص openSUSE فأنا دائماً أستخدم &lt;code&gt;dd&lt;/code&gt; (برنامج متوفر على أغلب توزيعات لينكس).&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;في هذا الشرح استخدمنا ملف iso كما هو لتثبيت أوبن سوزا على جهاز VitrualBox ظاهري.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;عملية التثبيت&lt;/h2&gt;
+&lt;h2 id=&#34;عملية-التثبيت:2d282031954fe3e6507567af122525b1&#34;&gt;عملية التثبيت&lt;/h2&gt;
 
 &lt;p&gt;بعد تحديد ملف iso في خيارات الجهاز الظاهري حتى يستخدمه كقرص مدخل في سواقة الأقراص الخاصة بالجهاز الظاهري، ننقر على زر Start لبدء تشغيل الجهاز والإقلاع من قرص أوبن سوزا:&lt;/p&gt;
 
 &lt;p&gt;هنا نرى الشاشة التي تظهر عند الإقلاع من قرص DVD الخاص بتوزيعة أوبن سوزا، سنختار المدخلة الثانية من القائمة (Installtion):&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/install-opensuse/opensuse_0.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/install-opensuse/opensuse_0.jpg&#34; alt=&#34;&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;بعد الإقلاع وتحميل برنامج التثبيت، ستطالعنا هذه الشاشة التي تعرض اتفاقية الترخيص، يمكننا تغيير اللغة وتخطيط لوحة المفاتيح من الخيارين في أعلى الشاشة:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/install-opensuse/opensuse_1.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/install-opensuse/opensuse_1.jpg&#34; alt=&#34;&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;الخطوة التالية تخيرنا بين تثبيت النظام أو تحديث نسخة سابقة من أوبن سوزا، بما أننا لا نملك نسخة سابقة مثبتة فلا يمكننا إلا تحديد الخيار الأول.&lt;/p&gt;
@@ -73,26 +218,26 @@
 
 &lt;p&gt;آخر خيار هو خيار Automatic Configuration، دعه فعالاً، هذا الخيار يترك عملية ضبط عدد من متغيرات النظام للتوزيعة. إذا ألغيته فسوف تسألك التوزيعة عن كثير من الإعدادات الإضافية؛ والواقع أننا لن نستفيد من الإعداد اليدوي كمبتدئين.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/install-opensuse/opensuse_2.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/install-opensuse/opensuse_2.jpg&#34; alt=&#34;&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;في هذه الشاشة نحدد المنطقة الزمنية (عبر تحديد المدينة بالنقر على الخريطة)، ويمكننا ضبط الساعة والتاريخ من زر Change في الأسفل:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/install-opensuse/opensuse_3.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/install-opensuse/opensuse_3.jpg&#34; alt=&#34;&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;في الشاشة التالية يطلب منا اختيار البيئة الرسومية الافتراضية للنظام. يُفَضَّل أن تختار KDE فهي تعمل أسرع من GNOME في برنامج VirtualBox (ربما هذه حالة خاصة بأوبن سوزا، لكن أداء KDE فعلا أفضل من GNOME 3 عند تشغيل التوزيعة في VirtualBox).&lt;/p&gt;
 
 &lt;p&gt;من ناحية أخرى، بيئة KDE تشبه قليلاً سطح المكتب في ويندوز أكثر من GNOME:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/install-opensuse/opensuse_4.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/install-opensuse/opensuse_4.jpg&#34; alt=&#34;&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;الشاشة التالية تطلب منا تحديد القرص الصلب (أو القسم من القرص partition) الذي نريد تثبيت أوبن سوزا عليه. طالما أننا في VirtualBox فيمكننا القبول بالخيارات الافتراضية، فقط أزل التحديد عن خيار Propose Separate Home Partition.&lt;/p&gt;
 
 &lt;p&gt;لو كنت تثبت أوبن سوزا على حاسوبك الحقيقي فعليك الحذر هنا، خصوصاً إذا كان لديك نظام ويندوز على الجهاز وتريد تثبيت أوبن سوزا بجواره وليس إزالته وتثبيتها بدلاً منه. لن نتعمق في موضوع تقسيم الأقراص الصلبة الآن بل سنتركه إلى وقت لاحق إن شاء الله:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/install-opensuse/opensuse_5.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/install-opensuse/opensuse_5.jpg&#34; alt=&#34;&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;في الشاشة التالية يطلب منا تحديد معلومات المستخدم الأساسي للنظام. الفرق بين User&amp;rsquo;s Full Name و Username هو أن الحقل الثاني هو الاسم المعتمد عند تسجيل الدخول للنظام، أما الأول فتستخدمه بعض البرامج &amp;hellip;.&lt;/p&gt;
@@ -113,12 +258,12 @@
 
 &lt;p&gt;سنتجاوز الخيارات الأخرى حالياً.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/install-opensuse/opensuse_6.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/install-opensuse/opensuse_6.jpg&#34; alt=&#34;&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;هنا عندما ضغطنا على Next ظهرت نافذة التحذير الصغيرة هذه تنبهنا إلى أن كلمة السر المحددة بسيطة جداً، يمكنك النقر على No وكتابة كلمة سر أقوى، أو اختيار Yes للبقاء على كلمة السر نفسها والمتابعة إلى الخطوة التالية.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/install-opensuse/opensuse_6-2.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/install-opensuse/opensuse_6-2.jpg&#34; alt=&#34;&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;وصلنا إلى النهاية تقريباً! هذه الشاشة تعرض لنا ملخصاً عن العمليات التي ستتم أثناء تثبيت التوزيعة.&lt;/p&gt;
@@ -127,19 +272,19 @@
 
 &lt;p&gt;انقر على كلمة Software للانتقال إلى الشاشة التي تعرض لك البرامج المتوفرة على القرص وتسمح لك بتحديد ما تريد تثبيته.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/install-opensuse/opensuse_7.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/install-opensuse/opensuse_7.jpg&#34; alt=&#34;&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;يمكنك تحديد مجموعات التطبيقات التي تريد تثبيتها من الجانب اليساري. وهناك في الأسفل على اليمين تظهر مساحة القرص التي ستبقى فارغة بعد الانتهاء من تثبيت النظام.&lt;/p&gt;
 
 &lt;p&gt;عند الانتهاء من تحديد البرامج اضغط OK للموافقة على التعديلات والعودة إلى شاشة الملخص السابقة.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/install-opensuse/opensuse_7-2.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/install-opensuse/opensuse_7-2.jpg&#34; alt=&#34;&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;الآن إذا كنت جاهزاً لتثبيت النظام اضغط على Install، ستظهر لك نافذة تأكيد تبين لك أن عملية تقطيع القرص وتهيئته ستجرى وبعدها يبدأ تثبيت النظام (قبل هذه المرحلة لا يتم التعديل على القرص الصلب أبداً).&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/install-opensuse/opensuse_8.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/install-opensuse/opensuse_8.jpg&#34; alt=&#34;&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;تستغرق عملية التثبيت حوالي 25 دقيقة أو أكثر، حسب كمية البرامج الإضافية التي حددتها للتثبيت من القرص. بعد الانتهاء سوف يعاد تشغيل الجهاز&amp;hellip; إذا ظهرت لك شاشة الإقلاع من قرص التثبيت مرة أخرى فاختر الخيار الأول (Boot from Hard Disk) للدخول إلى التوزيعة.&lt;/p&gt;
@@ -151,7 +296,7 @@
     <item>
       <title>أساسيات استخدام VirtualBox</title>
       <link>https://msaied93.github.io/linuxfun/post/vbox_intro/</link>
-      <pubDate>Tue, 17 Mar 2015 17:52:06 IST</pubDate>
+      <pubDate>Tue, 17 Mar 2015 17:52:06 +0200</pubDate>
       
       <guid>https://msaied93.github.io/linuxfun/post/vbox_intro/</guid>
       <description>
@@ -162,23 +307,23 @@
 
 &lt;p&gt;سنتجاوز مرحلة تثبيت برنامج VirtualBox نفسه لأنها بسيطة، وتشبه كثيراً تثبيت أي برنامج آخر.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_0&#34;&gt;إنشاء جهاز ظاهري جديد&lt;/h2&gt;
+&lt;h2 id=&#34;إنشاء-جهاز-ظاهري-جديد:157f4a5dca9122d5030eb128ab9bdc4b&#34;&gt;إنشاء جهاز ظاهري جديد&lt;/h2&gt;
 
 &lt;p&gt;الصورة التالية توضح واجهة البرنامج الرئيسية. من هذه النافذة يمكننا رؤية الحواسيب الظاهرية السابقة التي أنشأناها، ويمكننا بدء تشغيل أحد الأجهزة من زر Start، أو تعديل إعداداته ومواصفاته من زر Settings، أو إنشاء جهاز ظاهري جديد من زر New.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm.png&#34; alt=&#34;VirtualBox Manager&#34; title=&#34;نافذة VirtualBox الرئيسية&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/vbox_intro/vbox_new-vm.png&#34; alt=&#34;VirtualBox Manager&#34; title=&#34;نافذة VirtualBox الرئيسية&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;دعنا نضغط زر New لإنشاء جهاز ظاهري جديد. سوف تظهر لنا النافذة التالية:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm_step1.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/vbox_intro/vbox_new-vm_step1.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;في هذه النافذة يطلب البرنامج تحديد اسم الحاسوب الظاهري، وتحديد نوع نظام التشغيل الذي سنثبته داخله. يستفيد البرنامج من معرفة نظام التشغيل في تعديل بعض المتغيرات الخاصة بالجهاز الظاهري أو اقتراح حجم مناسب للذاكرة RAM والقرص الصلب وهكذا.&lt;/p&gt;
 
 &lt;p&gt;بعد هذه الخطوة نضغط Next فتظهر لنا النافذة التي تليها:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm_step2.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/vbox_intro/vbox_new-vm_step2.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;هنا نحدد حجم الذاكرة التي سيحجزها VirtualBox ويخصصها للجهاز الظاهري.&lt;/p&gt;
@@ -187,19 +332,19 @@
 
 &lt;p&gt;سنكتفي بحجز 512 ميغابايت ذاكرة حالياً. لنضغط Next وننتقل إلى الخطوة التالية:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm_step3.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/vbox_intro/vbox_new-vm_step3.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;في هذه الخطوة يطلب منا تحديد قرص صلب ظاهري لاستخدامه مع الجهاز الذي سننشئه. سوف نحدد خيار إنشاء قرص ظاهري جديد (كما في الصورة).&lt;/p&gt;
 
 &lt;p&gt;بعد الضغط على Create تظهر لنا النافذة التالية:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm_step4.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/vbox_intro/vbox_new-vm_step4.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;هنا يطلب تحديد نوع القرص الظاهري الذي سننشئه. هناك أنواع كثيرة مدعومة في البرنامج، تختلف عن بعضها بعدد من الخصائص. الخيار الافتراضي هو الخيار الأول (VDI)، وسوف نستخدمه كما هو.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm_step5.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/vbox_intro/vbox_new-vm_step5.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;بعد الضغط على Next نصل إلى هذه النافذة. هنا يمكننا تحديد طريقة حجز المساحة التخزينية على القرص الصلب: إما ديناميكياً أو حجم ثابت.&lt;/p&gt;
@@ -210,51 +355,51 @@
 
 &lt;p&gt;على أي حال، 8 غيغابايت صغيرة نسبياً، وطالما أننا حددنا خيار Dynamically allocated فلا مشكلة لو حددنا حجماً أكبر بقليل للقرص الصلب الظاهري. سوف نحدد 16 غيغابايت كما هو موضح في الصورة التالية.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm_step6.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/vbox_intro/vbox_new-vm_step6.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;وهكذا نكون قد انتهينا من إنشاء الحاسوب الظاهري، وهو جاهز الآن للإقلاع وتثبيت نظام تشغيل عليه.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_new-vm_step7.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/vbox_intro/vbox_new-vm_step7.png&#34; alt=&#34;VirtualBox New VM&#34; title=&#34;إنشاء جهاز ظاهري جديد في VirtualBox&#34; /&gt;
 &lt;/p&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;الإقلاع الأول&lt;/h2&gt;
+&lt;h2 id=&#34;الإقلاع-الأول:157f4a5dca9122d5030eb128ab9bdc4b&#34;&gt;الإقلاع الأول&lt;/h2&gt;
 
 &lt;p&gt;عند إقلاع الجهاز الظاهري أول مرة ستظهر لنا النافذة التالية التي تطلب منا تحديد قرص إقلاعي لتثبيت نظام التشغيل منه.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_first-boot.png&#34; alt=&#34;VirtualBox VM First Boot&#34; title=&#34;إقلاع الجهاز الظاهري أول مرة&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/vbox_intro/vbox_first-boot.png&#34; alt=&#34;VirtualBox VM First Boot&#34; title=&#34;إقلاع الجهاز الظاهري أول مرة&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;إذا ظهرت هذه الشاشة يمكننا تحديد ملف iso مناسب للإقلاع منه وتثبيت نظام التشغيل.&lt;/p&gt;
 
 &lt;p&gt;أو يمكن أن تواجهنا شاشة الخطأ التالية التي تبين أن الجهاز لا يحوي أي وسيط مناسب للإقلاع:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_error-booting.png&#34; alt=&#34;VirtualBox No Bootable Medium&#34; title=&#34;فشل إقلاع الجهاز الظاهري لعدم وجود وسيط إقلاعي&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/vbox_intro/vbox_error-booting.png&#34; alt=&#34;VirtualBox No Bootable Medium&#34; title=&#34;فشل إقلاع الجهاز الظاهري لعدم وجود وسيط إقلاعي&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;إذا ظهرت هذه الشاشة فعليك ببساطة إغلاق هذه النافذة (ثم اختيار Power off the machine) لإيقاف تشغيل الجهاز.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_close.png&#34; alt=&#34;VirtualBox Power off the machine&#34; title=&#34;إيقاف تشغيل الجهاز الظاهري&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/vbox_intro/vbox_close.png&#34; alt=&#34;VirtualBox Power off the machine&#34; title=&#34;إيقاف تشغيل الجهاز الظاهري&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;بعد إيقاف تشغيل الجهاز توجه إلى الإعدادات (من زر Settings)، وبعدها اختر تبويب Storage؛ كما في الصورة التالية:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_storage-settings.png&#34; alt=&#34;VirtualBox VM Settings&#34; title=&#34;إعدادات الجهاز الظاهري&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/vbox_intro/vbox_storage-settings.png&#34; alt=&#34;VirtualBox VM Settings&#34; title=&#34;إعدادات الجهاز الظاهري&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;ومن هناك يمكننا تحديد سواقة الأقراص الليزرية الخاصة بالجهاز الظاهري، وبالنقر على زر القرص الأزرق في أقصى اليمين تظهر لنا قائمة قصيرة تسمح باستخدام سواقة الجهاز الحقيقي والقراءة منها (إذا كان لديك نظام تشغيل على قرص ليزري حقيقي يمكنك استخدام هذا الخيار)، أو يمكن استخدام الخيار الأول لتحديد ملف iso واستخدامه كقرص ظاهري للجهاز والإقلاع منه.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_cd-drive.png&#34; alt=&#34;VirtualBox VM CD Drive Settings&#34; title=&#34;إعدادات سواقة الأقراص الليزرية في الجهاز الظاهري&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/vbox_intro/vbox_cd-drive.png&#34; alt=&#34;VirtualBox VM CD Drive Settings&#34; title=&#34;إعدادات سواقة الأقراص الليزرية في الجهاز الظاهري&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;هنا تظهر نافذة تحديد صورة القرص الظاهري حيث يمكن الاستعراض بحثاً عن ملفات iso التي يمكن استخدامها.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;/linuxfun/post/vbox_intro/vbox_choose-virtual-disk.png&#34; alt=&#34;VirtualBox Choose Virtual Disk Image&#34; title=&#34;تحديد صورة قرص ظاهري لاستخدامها مع الحاسوب الظاهري&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://msaied93.github.io/linuxfun/linuxfun/post/vbox_intro/vbox_choose-virtual-disk.png&#34; alt=&#34;VirtualBox Choose Virtual Disk Image&#34; title=&#34;تحديد صورة قرص ظاهري لاستخدامها مع الحاسوب الظاهري&#34; /&gt;
 &lt;/p&gt;
 
 &lt;p&gt;بعد ذلك يمكننا تشغيل الجهاز مرة ثانية ويجب عندها أن يقلع من القرص الذي حددناه له، وعند ذلك تبدأ عملية تثبيت نظام التشغيل.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;استخدام ميزة Snapshots&lt;/h2&gt;
+&lt;h2 id=&#34;استخدام-ميزة-snapshots:157f4a5dca9122d5030eb128ab9bdc4b&#34;&gt;استخدام ميزة Snapshots&lt;/h2&gt;
 
 &lt;hr /&gt;
 
@@ -267,7 +412,7 @@
     <item>
       <title>الجزء الأول - مكونات التوزيعة</title>
       <link>https://msaied93.github.io/linuxfun/post/linux_p1/</link>
-      <pubDate>Sun, 15 Mar 2015 14:52:25 IST</pubDate>
+      <pubDate>Sun, 15 Mar 2015 14:52:25 +0200</pubDate>
       
       <guid>https://msaied93.github.io/linuxfun/post/linux_p1/</guid>
       <description>
@@ -278,7 +423,7 @@
 
 &lt;p&gt;في الواقع، كلمة &amp;ldquo;لينكس&amp;rdquo; هي اسم نواة نظام التشغيل فقط، ولكن جرت العادة أن يطلق اسم لينكس على نظام التشغيل ككل (ربما لأنه لا يوجد اسم عام للنظام؟).&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_0&#34;&gt;مكونات التوزيعة&lt;/h2&gt;
+&lt;h2 id=&#34;مكونات-التوزيعة:a796711ead5174a98bf229f6d0a13bbc&#34;&gt;مكونات التوزيعة&lt;/h2&gt;
 
 &lt;p&gt;كل توزيعة فيها مجموعة من المكونات:&lt;/p&gt;
 
@@ -302,7 +447,7 @@
 
 &lt;p&gt;كما تقدم التوزيعات نظام التشغيل متكاملاً على قرص ليزري (يمكنك تنزيله بشكل ملف iso غالباً من موقع التوزيعة) يمكنك تجربته مباشرة دون تثبيته على الحاسوب، أو إذا أردت تثبيته فستجد برنامجاً خاصاً بالتثبيت يساعدك في هذه المهمة.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;أشهر التوزيعات&lt;/h2&gt;
+&lt;h2 id=&#34;أشهر-التوزيعات:a796711ead5174a98bf229f6d0a13bbc&#34;&gt;أشهر التوزيعات&lt;/h2&gt;
 
 &lt;p&gt;بما أن جميع البرامج والتطبيقات مفتوحة المصدر ويسمح للجميع تعديلها وتوزيعها، فلا يوجد أي قيد يمنع أي أحد من إنشاء توزيعة خاصة به، ولذلك تجد أن توزيعات لينكس كثيرة جداً. حالياً هناك ما يزيد على 300 توزيعة نشطة (بمعنى أنها تتطور وتصدر منها نسخ جديدة)، أما إذا أردنا حساب التوزيعات القديمة التي توقفت أيضاً فسوف يصل العدد إلى أكثر من 700 توزيعة — وفقاً لموقع &lt;a href=&#34;http://distrowatch.com&#34;&gt;Distro Watch&lt;/a&gt;.&lt;/p&gt;
 
